@@ -1,6 +1,6 @@
 var id;
 var players = 0;
-var hp      = {};
+var player = {};
 
 var Host = {
 
@@ -14,7 +14,8 @@ var Host = {
     if(players + 1 <= 2)
     {
       players++;
-      hp[data.msg] = 100;
+      player[data.msg] = {hp: 100, player: players};
+      document.getElementById("hp").innerHTML += "<span id='"+data.msg+"'>Player "+players+": 100</span>";
     }else
     {
       console.log("Game ready");
@@ -25,21 +26,22 @@ var Host = {
   attack_client: function(data){
     switch(data.attack_type){
       case "l_hit":
-        hp[data.player] -= 2.5;
+        player[data.player].hp -= 2.5;
         break;
       case "h_hit":
-        hp[data.player] -= 5;
+        player[data.player].hp -= 5;
         break;
       case "l_kick":
-        hp[data.player] -= 3;
+        player[data.player].hp -= 3;
         break;
       case "h_kick":
-        hp[data.player] -= 5.5;
+        player[data.player].hp -= 5.5;
         break;
     }
 
     console.log("Player " + data.player + " is being attacked with a: " + data.attack_type);
-    console.log("Player " + data.player + " hp: " + hp[data.player]);
+    console.log("Player " + data.player + " hp: " + player[data.player].hp);
+    document.getElementById(data.player).innerHTML = "Player " + player[data.player].player + ": " + player[data.player].hp;
   }
 };
 
