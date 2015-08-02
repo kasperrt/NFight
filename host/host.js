@@ -5,8 +5,10 @@ var player = {};
 var Host = {
 
   show_id: function(data){
-    id = data;
-    document.getElementById("id").innerHTML = data;
+    id = data.msg;
+    url = data.url;
+    document.getElementById("url").innerHTML = url;
+    document.getElementById("id").innerHTML = id;
   },
 
   connect_client: function(data){
@@ -53,7 +55,7 @@ socket.on("msg", function(data){
   console.log(data);
   switch(data.type){
     case "id":
-      Host.show_id(data.msg);
+      Host.show_id(data);
       break;
     case "connection":
       Host.connect_client(data);

@@ -42,9 +42,23 @@ io.on('connection', function(socket){
       case "join":
         if(md.mobile() === null)
         {
+          var os = require('os');
+
+          var interfaces = os.networkInterfaces();
+          var addresses = [];
+          for (var k in interfaces) {
+              for (var k2 in interfaces[k]) {
+                  var address = interfaces[k][k2];
+                  if (address.family === 'IPv4' && !address.internal) {
+                      addresses.push(address.address);
+                  }
+              }
+          }
+
+          console.log(addresses);
           //socket.join(guid);
           socket.join("1a");
-          socket.emit("msg", {type: "id", msg: guid});
+          socket.emit("msg", {type: "id", msg: guid, url: addresses + ":8080"});
         }else{
           console.log(data.room);
           room = data.room;
