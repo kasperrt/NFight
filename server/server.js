@@ -1,20 +1,14 @@
-var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
-var crypto = require('crypto');
-
-var socketport = 3000;
-var port = 8080;
-var lists = [];
-
-var static = require('node-static');
-var MobileDetect = require('mobile-detect');
-
-//
-// Create a node-static server instance to serve the './' folder
-//
-var file = new static.Server('./');
+var express       = require('express');
+var app           = express();
+var server        = require('http').createServer(app);
+var io            = require('socket.io')(server);
+var crypto        = require('crypto');
+var socketport    = 3000;
+var port          = 8080;
+var lists         = [];
+var static        = require('node-static');
+var MobileDetect  = require('mobile-detect');
+var file          = new static.Server('./');
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {
@@ -36,6 +30,44 @@ server.listen(socketport, function () {
 
 
 io.on('connection', function(socket){
+
   console.log("Connected socket:" + socket);
+  var md   = new MobileDetect(socket.handshake.headers['user-agent']);
+  var guid = (hash_pass(socket.handshake.headers["user-agent"] + socket.handshake.address + socket.handshake.headers["accept-language"])).substring(0,8);
+  var room;
+  var player = 1;
+
+  socket.on("room", function(data){
+    switch(data.type){
+      case "join":
+        if(md.mobile() === null)
+        {
+          socket.join("1a");
+          socket.emit("msg", {type: "id", msg: guid});
+        }else{
+          //socket.join(data.room);
+          console.log(data.room);
+          room = data.room;
+          io.to(data.room).emit("msg", {type: "connection", msg: guid});
+          socket.emit("msg", {type: "connection", msg: true});
+        }
+        break;
+      case "attack":
+        console.log(data.attack_type);
+        io.to(room).emit("msg", {type: "attack", attack_type: data.attack_type, player: guid})
+        break;
+    }
+    if(data.message == "join"){
+      console.log("join");
+      
+    }else
+    {
+      //io.to(data.room).emit(data.message);
+    }
+  });
 });
 
+function hash_pass(adminpass)
+{
+  return crypto.createHash('sha256').update(adminpass).digest('base64');
+}
