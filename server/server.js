@@ -42,10 +42,10 @@ io.on('connection', function(socket){
       case "join":
         if(md.mobile() === null)
         {
+          //socket.join(guid);
           socket.join("1a");
           socket.emit("msg", {type: "id", msg: guid});
         }else{
-          //socket.join(data.room);
           console.log(data.room);
           room = data.room;
           io.to(data.room).emit("msg", {type: "connection", msg: guid});
@@ -56,13 +56,6 @@ io.on('connection', function(socket){
         console.log(data.attack_type);
         io.to(room).emit("msg", {type: "attack", attack_type: data.attack_type, player: guid})
         break;
-    }
-    if(data.message == "join"){
-      console.log("join");
-      
-    }else
-    {
-      //io.to(data.room).emit(data.message);
     }
   });
 });
