@@ -30,4 +30,8 @@
     socket.emit("room", {type: "attack", attack_type: "h_kick"});
   });
 
+  document.getElementById("block").addEventListener("click", function(){
+    socket.emit("room", {type: "block"});
+  });
+
 })();

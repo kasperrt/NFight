@@ -70,6 +70,9 @@ io.on('connection', function(socket){
         console.log(data.attack_type);
         io.to(room).emit("msg", {type: "attack", attack_type: data.attack_type, player: guid})
         break;
+      case "block":
+        console.log("block");
+        io.to(room).emit("msg", {type: "block", player: guid});
     }
   });
 });
