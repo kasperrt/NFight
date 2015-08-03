@@ -1,4 +1,6 @@
-# Project-Graphite
+# NFight
+
+A node.js fighting game with host and clients.
 
 Start the server with 
 ```
