@@ -18,6 +18,7 @@ require('http').createServer(function (request, response) {
         else type = "mobile";
         if(request.url == "/style.css") file.serveFile(type+'/style.css', 200, {}, request, response);
         else if(request.url == "/lib/main.js") file.serveFile('lib/main.js', 200, {}, request, response);
+        else if(request.url == "/lib/jquery.vibrate.min.js") file.serveFile('lib/jquery.vibrate.min.js', 200, {}, request, response);
         else if(request.url == "/host.js" || request.url == "/mobile.js") file.serveFile(type+'/'+type+'.js', 200, {}, request, response);
         else file.serveFile(type+'/index.html', 200, {}, request, response);
 
@@ -61,6 +62,7 @@ io.on('connection', function(socket){
           socket.emit("msg", {type: "id", msg: guid, url: addresses + ":8080"});
         }else{
           console.log(data.room);
+          socket.join(guid);
           room = data.room;
           io.to(data.room).emit("msg", {type: "connection", msg: guid});
           socket.emit("msg", {type: "connection", msg: true});
@@ -73,6 +75,10 @@ io.on('connection', function(socket){
       case "block":
         console.log("block");
         io.to(room).emit("msg", {type: "block", player: guid});
+        break;
+      case "hit":
+        io.to(data.reciever).emit("hit");
+        break;
     }
   });
 });

@@ -14,6 +14,10 @@
     }
   });
 
+  socket.on("hit", function(){
+    $("#hidden_button").trigger("click");
+  });
+
   document.getElementById("l_hit").addEventListener("click", function(){
     socket.emit("room", {type: "attack", attack_type: "l_hit"});
   });
@@ -33,5 +37,12 @@
   document.getElementById("block").addEventListener("click", function(){
     socket.emit("room", {type: "block"});
   });
+
+  $("#l_hit").vibrate();
+  $("#h_hit").vibrate();
+  $("#l_kick").vibrate();
+  $("#h_kick").vibrate();
+  $("#block").vibrate();
+  $("#hidden_button").vibrate("long");
 
 })();

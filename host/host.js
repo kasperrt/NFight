@@ -50,9 +50,12 @@ var Host = {
           break;
       }
       if(!player[current_opponent].blocking)
+      {
         player[current_opponent].hp -= hp;
-      else
+        socket.emit("room", {type: "hit", reciever: current_opponent});
+      }else
         console.log("Player " + player[current_player].player + " was blocked");
+      
       Host.timeout_player(current_player, hp*272.72);
     
       console.log("Player " + player[current_opponent].player + " is being attacked with a: " + data.attack_type);
